@@ -1,0 +1,220 @@
+<div [formGroup]="searchForm" style="width:99.5%" (keyup.enter)="keyDownFunction($event)">
+
+    <p-panel header="Disable Account" [style]="{ marginTop: '10px'}">
+
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>UAM ID</span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="uam_id" appAutofocus autocomplete="off">
+            </div>
+            <div class='p-col-2'>
+                <span>&nbsp;</span>
+            </div>
+            <div class='p-col-4'>
+                <span>&nbsp;</span>
+            </div>
+        </div>
+
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>Surname</span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="surname" autocomplete="off">
+            </div>
+            <div class='p-col-2'>
+                <span>Given Name</span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="givenname" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>Windows Login Name</span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="win_login_name" autocomplete="off">
+            </div>
+            <div class='p-col-2'>
+                <span>Notes Mail</span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="notes_mail" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>JJO/Non-JJO/Special Account</span>
+            </div>
+            <div class='p-col-4'>
+                <p-dropdown id="input" formControlName="account_type" [options]="account_types" optionLabel="value" class="dropdown_common"></p-dropdown>
+            </div>
+            <!-- <div class='p-col-2'>
+        <span>Account Status</span>
+      </div>
+      <div class='p-col-4'>
+        <p-dropdown id="input" formControlName="account_status" [options]="account_statuss" optionLabel="value"
+          class="dropdown_common"></p-dropdown>
+      </div> -->
+        </div>
+
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>Post Title</span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="post_title">
+            </div>
+            <div class='p-col-2'>
+                <span>Section</span>
+            </div>
+            <div class='p-col-4'>
+                <!-- <p-dropdown id="input" formControlName="section" [options]="sections" optionLabel="value"
+          class="dropdown_common"></p-dropdown> -->
+                <p-autoComplete formControlName="section" [suggestions]="suggestedSection" *ngIf="data.canSelectSection()" (completeMethod)="searchSections($event)" [inputStyle]="{'width':'400px'  }" dataKey="code" forceSelection="true" field="code" [minLength]="2" required="false"
+                    (onClear)="clearSection($event)" #autoCompleteSection>
+                    <ng-template let-section pTemplate="item">
+                        <div class="p-grid">
+                            <div class="p-col-4"><strong>{{section.code}} :</strong></div>
+                            <div class="p-col-8">{{section.description}}</div>
+                        </div>
+                    </ng-template>
+                </p-autoComplete>
+                <div *ngIf="!data.canSelectSection()">
+                    {{data.current_user.section.display_text}}
+                </div>
+            </div>
+        </div>
+
+        <p-footer>
+            <button pButton type="button" label="Reset" class="button_common" (click)="onReset()"></button>
+            <button pButton type="button" label="Search" class="button_common" (click)="onSearch()"></button>
+        </p-footer>
+    </p-panel>
+</div>
+
+<div style="width:99.5%">
+
+    <p-table #dt [rows]="10" [paginator]="true" [alwaysShowPaginator]="false" [style]="{ marginTop: '10px'}" [value]="tableItems" [lazy]="true" (onLazyLoad)="loadTableLazy($event)" [totalRecords]="totalRecords" [loading]="loading" [rowsPerPageOptions]="[10,25,50]">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th [pSortableColumn]="'uam_id'" class="tableHeader">UAM ID
+                    <p-sortIcon [field]="'uam_id'"></p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'surname'" class="tableHeader">Surname
+                    <p-sortIcon [field]="'surname'"></p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'given_name'" class="tableHeader">Given Name
+                    <p-sortIcon [field]="'given_name'">
+                    </p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'ad_windows_login_name'" class="tableHeader">Windows Login Name
+                    <p-sortIcon [field]="'ad_windows_login_name'"></p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'ln_lotus_notes_mail_name'" class="tableHeader">Notes Mail
+                    <p-sortIcon [field]="'ln_lotus_notes_mail_name'"></p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'post_title'" class="tableHeader">Post Title
+                    <p-sortIcon [field]="'post_title'">
+                    </p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'section'" class="tableHeader">Section
+                    <p-sortIcon [field]="'section'">
+                    </p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'account_status_name'" class="tableHeader">Account Status
+                    <p-sortIcon [field]="'account_status_name'"></p-sortIcon>
+                </th>
+                <th class="tableHeader" style="width: 100px"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+            <tr [pSelectableRow]="item" *ngIf="isShowSelectRow(item)" style="height:50px">
+                <td>{{item.uam_id}}</td>
+                <td>{{item.surname}}</td>
+                <td>{{item.given_name}}</td>
+                <td>{{item.ad_windows_login_name }}</td>
+                <td>{{item.ln_lotus_notes_mail_name}}</td>
+                <td>{{item.post_title}}</td>
+                <td>{{item.section ? item.section.code : ""}}</td>
+                <td>{{item.account_status_name }}</td>
+                <td><button pButton type="button" label="Disable" class="button_common" (click)="onSelect(item)" *ngIf="showDisableButton(item)"></button></td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+            <div>
+                Showing
+                <strong>{{utils.min(dt.first + 1, dt.totalRecords)}}</strong> to
+                <strong>{{utils.min(dt.first + dt.rows, dt.totalRecords)}}</strong> of
+                <strong>{{dt.totalRecords}}</strong>
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<div style="height:60px;display: table-cell; vertical-align: middle;  padding-top:50px" *ngIf="disable_list.length>0 ">
+    To-Be-Disabled List
+</div>
+
+<div style="width:99.5%" *ngIf="disable_list.length>0 ">
+    <p-table [value]="disable_list" [paginator]="false" [rows]="7" [style]="{ marginTop: '10px'}">
+        <ng-template pTemplate="header">
+            <tr>
+
+                <th [pSortableColumn]="'uam_id'" class="tableHeader">UAM ID
+                    <p-sortIcon [field]="'uam_id'"></p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'surname'" class="tableHeader">Surname
+                    <p-sortIcon [field]="'surname'"></p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'given_name'" class="tableHeader">Given Name
+                    <p-sortIcon [field]="'given_name'">
+                    </p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'ad_windows_login_name'" class="tableHeader">Windows Login Name
+                    <p-sortIcon [field]="'ad_windows_login_name'"></p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'ln_lotus_notes_mail_name'" class="tableHeader">Notes Mail
+                    <p-sortIcon [field]="'ln_lotus_notes_mail_name'"></p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'post_title'" class="tableHeader">Post Title
+                    <p-sortIcon [field]="'post_title'">
+                    </p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'section'" class="tableHeader">Section
+                    <p-sortIcon [field]="'section'">
+                    </p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'account_status_name'" class="tableHeader">Account Status
+                    <p-sortIcon [field]="'account_status_name'"></p-sortIcon>
+                </th>
+                <th class="tableHeader" style="width: 100px"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-user>
+            <tr [pSelectableRow]="user" style="height:50px">
+                <td>{{user.uam_id}}</td>
+                <td>{{user.surname}}</td>
+                <td>{{user.given_name}}</td>
+                <td>{{user.ad_windows_login_name }}</td>
+                <td>{{user.ln_lotus_notes_mail_name}}</td>
+                <td>{{user.post_title}}</td>
+                <td>{{user.section ? user.section.code : ""}}</td>
+                <td>{{user.account_status_name }}</td>
+                <td><button pButton type="button" label="Cancel" class="button_common" (click)="onCancel(user)"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <div style="text-align: right;">
+        <button pButton type="button" label="Confirm and Disable" class="button_common" (click)="onConfirmDisable()"></button>
+    </div>
+</div>
+
+<app-jud-dialog (submitEvent)="onDialogSubmit()" #judDialog></app-jud-dialog>

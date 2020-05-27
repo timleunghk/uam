@@ -1,0 +1,73 @@
+<form [formGroup]="localForm">
+
+  <fieldset class="fieldset_common">
+    <legend>User Identity Information</legend>
+    <app-basic-user-info [parentForm]="localForm" [groupName]="'basic_user_info'" *ngIf="can_show" [canEdit]="false" #basicUserInfo>
+    </app-basic-user-info>
+  </fieldset>
+
+  <app-user-info-systems [parentForm]="localForm" [groupName]="'user_info_systems'" *ngIf="can_show" [canEdit]="false" #userInfoSys>
+  </app-user-info-systems>
+
+  <div class="fieldsets_spacing"></div>
+
+  <fieldset class="fieldset_common">
+    <div class="p-grid">
+      <div class='p-col-2'>
+        <span>Attachment</span>
+      </div>
+      <div class='p-col-10'>
+        <div *ngFor="let selecedFile of selecedFiles">
+          <label (click)="doViewFile(selecedFile)">{{selecedFile.name}}</label>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="fieldsets_spacing"></div>
+
+  <fieldset class="fieldset_common">
+    <div class="p-grid">
+      <div class='p-col-2'>
+        <span>Creation date</span>
+      </div>
+      <div class='p-col-4'>
+        <span> {{creation_date }} </span>
+      </div>
+      <div class='p-col-2'>
+        <span>Last Modification Date</span>
+      </div>
+      <div class='p-col-4'>
+        <span> {{last_modification_date }} </span>
+      </div>
+      <div class='p-col-2'>
+        <span>Creation User</span>
+      </div>
+      <div class='p-col-4'>
+        <span> {{creation_user}} </span>
+      </div>
+      <div class='p-col-2'>
+        <span>Last Modification User</span>
+      </div>
+      <div class='p-col-4'>
+        <span> {{last_modification_user}} </span>
+      </div>
+      <div class='p-col-2'>
+        <span>Status</span>
+      </div>
+      <div class='p-col-4'>
+        <span> {{account_status_name }} </span>
+      </div>
+      <div class='p-col-2'>
+        <span> </span>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="fieldsets_spacing"></div>
+
+  <p-footer>
+    <button pButton type="button" label="Close" class="button_common" (click)="onClose()"></button>
+  </p-footer>
+
+</form>

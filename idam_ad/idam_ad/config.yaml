@@ -1,0 +1,26 @@
+AMQP_URI: 'pyamqp://linuxadmin:P@ssw0rd@172.18.21.116'
+# AMQP_URI: ${AMQP_URI}
+
+AD_CONFIG:
+  hostname: '172.18.21.162'
+  username: 'fimsetupadm@idam.ext'
+  pwd: 'P@ssw0rd2015'
+  base_dn:  'DC=IDAM,DC=EXT'
+
+LOGGING:
+  version: 1
+
+  formatters:
+    brief:
+      format: '%(asctime)s %(message)s'
+      default_msec_format: '%s.%03d'
+      # datefmt: '%Y-%m-%d %H:%M:%S'
+
+  handlers:
+    console:
+      class: logging.StreamHandler
+      formatter: brief
+  
+  root:
+    level: DEBUG
+    handlers: [console]

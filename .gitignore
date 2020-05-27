@@ -1,0 +1,11 @@
+auditlogenv/*
+backendenv/*
+romaenv/*
+jjoenv/*
+adenv/*
+dpenv/*
+*.pyc
+*.sqlite3
+*/staticfiles/*
+node_modules/
+uam_env/

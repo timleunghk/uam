@@ -1,0 +1,27 @@
+AMQP_URI: 'pyamqp://linuxadmin:P@ssw0rd@172.18.21.116'
+# AMQP_URI: ${AMQP_URI}
+
+OSDP_CONFIG:
+  hostname: '172.18.21.153'
+  portno:   2636
+  username: 'cn=fimadmin,ou=admin,ou=users,dc=jud,dc=org'
+  pwd: 'P@ssw0rd'
+  base_dn:  'ou=peopled,ou=users,dc=jud,dc=org'
+
+LOGGING:
+  version: 1
+
+  formatters:
+    brief:
+      format: '%(asctime)s %(message)s'
+      default_msec_format: '%s.%03d'
+      # datefmt: '%Y-%m-%d %H:%M:%S'
+
+  handlers:
+    console:
+      class: logging.StreamHandler
+      formatter: brief
+  
+  root:
+    level: DEBUG
+    handlers: [console]

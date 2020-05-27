@@ -1,0 +1,152 @@
+<div [formGroup]="searchForm" style="width:99.5%" (keyup.enter)="keyDownFunction($event)">
+
+    <p-panel header="Request Enquiry" [style]="{ marginTop: '10px'}">
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>Request ID</span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="request_id" #request_id>
+            </div>
+
+            <div class='p-col-2'>
+                <span>Request By</span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="request_by">
+            </div>
+        </div>
+
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>Request Type</span>
+            </div>
+            <div class='p-col-4'>
+                <p-dropdown id="input" formControlName="request_type" [options]="request_types" optionLabel="value" class="dropdown_common"></p-dropdown>
+            </div>
+
+            <div class='p-col-2'>
+                <span>Request Staus</span>
+            </div>
+            <div class='p-col-4'>
+                <p-dropdown id="input" formControlName="request_status" [options]="request_statuss" optionLabel="value" class="dropdown_common"></p-dropdown>
+            </div>
+        </div>
+
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>Surname</span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="surname" autocomplete="off">
+            </div>
+            <div class='p-col-2'>
+                <span>Given Name</span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="given_name" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>Section</span>
+            </div>
+            <div class='p-col-4'>
+                <!-- <p-dropdown id="input" formControlName="section" [options]="sections" optionLabel="value"
+          class="dropdown_common"></p-dropdown> -->
+                <p-autoComplete formControlName="section" [suggestions]="suggestedSection" *ngIf="data.canSelectSection()" (completeMethod)="searchSections($event)" [inputStyle]="{'width':'400px'  }" dataKey="code" forceSelection="true" field="code" [minLength]="2" required="false"
+                    (onClear)="clearSection($event)" #autoCompleteSection>
+                    <ng-template let-section pTemplate="item">
+                        <div class="p-grid">
+                            <div class="p-col-4"><strong>{{section.code}} :</strong></div>
+                            <div class="p-col-8">{{section.description}}</div>
+                        </div>
+                    </ng-template>
+                </p-autoComplete>
+                <div *ngIf="!data.canSelectSection()">
+                    {{data.current_user.section.display_text}}
+                </div>
+            </div>
+            <div class='p-col-2'>
+                <span>JJO/Non-JJO/Special Account</span>
+            </div>
+            <div class='p-col-4'>
+                <p-dropdown id="input" formControlName="account_type" [options]="account_types" optionLabel="value" class="dropdown_common"></p-dropdown>
+            </div>
+        </div>
+
+        <p-footer>
+            <button pButton type="button" label="Reset" class="button_common" (click)="onReset()"></button>
+            <button pButton type="button" label="Search" class="button_common" (click)="onSearch()"></button>
+        </p-footer>
+    </p-panel>
+</div>
+
+<div style="width:99.5%">
+    <p-table #dt selectionMode="single" dataKey="request_id" [paginator]="true" [rows]="10" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" [style]="{ marginTop: '10px'}" [value]="tableItems" [lazy]="true" (onLazyLoad)="loadTableLazy($event)"
+        [totalRecords]="totalRecords" [loading]="loading" [rowsPerPageOptions]="[10,25,50]" [alwaysShowPaginator]="false">
+        <ng-template pTemplate="header">
+            <tr>
+                <th [pSortableColumn]="'request_id'" class="tableHeader">Request ID
+                    <p-sortIcon [field]="'request_id'">
+                    </p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'query_surname'" class="tableHeader">Surname
+                    <p-sortIcon [field]="'query_surname'">
+                    </p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'query_given_name'" class="tableHeader">Given Name
+                    <p-sortIcon [field]="'query_given_name'">
+                    </p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'query_post_title'" class="tableHeader">Post Title
+                    <p-sortIcon [field]="'query_post_title'">
+                    </p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'section'" class="tableHeader">Section
+                    <p-sortIcon [field]="'section'"></p-sortIcon>
+                </th>
+                <!-- <th [pSortableColumn]="'creation_date'" class="tableHeader">Create Date<p-sortIcon [field]="'creation_date'">
+          </p-sortIcon>
+        </th> -->
+                <th [pSortableColumn]="'submission_date'" class="tableHeader">Submission Date
+                    <p-sortIcon [field]="'submission_date'">
+                    </p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'query_request_type_desc'" class="tableHeader">Request Type
+                    <p-sortIcon [field]="'query_request_type_desc'">
+                    </p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'query_status_desc'" class="tableHeader">Request Staus
+                    <p-sortIcon [field]="'query_status_desc'"></p-sortIcon>
+                </th>
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-request>
+            <tr [pSelectableRow]="request" style="height:50px">
+                <td>{{request.request_id}}</td>
+                <td>{{request.query_surname}}</td>
+                <td>{{request.query_given_name}}</td>
+                <td>{{request.query_post_title}}</td>
+                <td>{{request.section ? request.section.code : ""}}</td>
+                <!-- <td>{{request.creation_date }}</td> -->
+                <td>{{request.submission_date }}</td>
+                <td>{{request.query_request_type_desc }}</td>
+                <td>{{request.query_status_desc}}</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+            <div>
+                Showing
+                <strong>{{utils.min(dt.first + 1, dt.totalRecords)}}</strong> to
+                <strong>{{utils.min(dt.first + dt.rows, dt.totalRecords)}}</strong> of
+                <strong>{{dt.totalRecords}}</strong>
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+<!--  <router-outlet></router-outlet> -->
+<app-request-popup-container [in_request]='selectedRequest' *ngIf="selectedRequest"></app-request-popup-container>
+<app-jud-dialog #judDialog></app-jud-dialog>

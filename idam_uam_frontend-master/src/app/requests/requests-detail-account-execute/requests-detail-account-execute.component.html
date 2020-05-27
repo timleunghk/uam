@@ -1,0 +1,147 @@
+<form [formGroup]="localForm" (ngSubmit)="onSubmit()" autocomplete="off">
+
+    <fieldset class="fieldset_common" *ngIf="request['resourcetype']=='CreateAccountRequest' || request['resourcetype']=='UpdateAccountRequest'">
+        <legend>Flow</legend>
+        <app-request-flow [request]="request" *ngIf="request"></app-request-flow>
+    </fieldset>
+
+    <fieldset class="fieldset_common">
+        <legend>Email To</legend>
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>To Be Reviewed By *</span>
+            </div>
+            <div class='p-col-10'>
+                <p-autoComplete formControlName="review_by" class="mail_input" [suggestions]="suggestedEmails" [appDisableControl]="!canEdit" (completeMethod)="searchMail($event)" [inputStyle]="{'width':'500px'}" [multiple]="true" [minLength]="2" [dropdown]="false" required
+                    #autoCompleteObject>
+                </p-autoComplete>
+            </div>
+
+            <div class='p-col-2'>
+                <span>Copy Request To(People to be informed)</span>
+            </div>
+            <div class='p-col-10'>
+                <p-autoComplete formControlName="copy_to" class="mail_input" [suggestions]="suggestedEmails" [appDisableControl]="!canEdit" (completeMethod)="searchMail($event)" [inputStyle]="{'width':'500px'}" [multiple]="true" [minLength]="2" [dropdown]="false">
+                </p-autoComplete>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="fieldset_common">
+        <legend>User Identity Information</legend>
+        <div *ngIf="false">
+            <div class="p-grid">
+                <div class='p-col-2'>
+                    <span>ID</span>
+                </div>
+                <div class='p-col-4'>
+                    <span>{{request.id}}</span>
+                </div>
+                <div class='p-col-2'>
+                    <span>Request ID </span>
+                </div>
+                <div class='p-col-4'>
+                    <span>{{request.request_id}}</span>
+                </div>
+            </div>
+        </div>
+        <!--        
+      -->
+        <app-basic-user-info [parentForm]="localForm" [groupName]="'basic_user_info'" *ngIf="request" [canEdit]="canEdit" [showContactInfo]="isShowContactInfo" #basicUserInfo>
+        </app-basic-user-info>
+    </fieldset>
+
+    <app-user-info-systems [parentForm]="localForm" [groupName]="'user_info_systems'" *ngIf="request" [canEdit]="canEdit" #userInfoSys (winNameEvent)="basicUserInfo.doWinName($event)" (notesNameEvent)="basicUserInfo.doNotesNameEvent($event)" [request]="request">
+    </app-user-info-systems>
+
+    <div *ngIf="resType == 'CreateAccountRequest' ||  resType == 'UpdateAccountRequest'">
+        <fieldset class="fieldset_common">
+            <legend>Other Request</legend>
+            <div class="p-grid">
+                <div class='p-col-2'>
+                    <span>Request by Requester</span>
+                </div>
+                <div class='p-col-10'>
+                    <textarea pInputTextarea formControlName="oth_other_request" cols="130" rows="5" [appDisableControl]="true"></textarea>
+                </div>
+                <div class='p-col-2'>
+                    <span>Justification by ITOO</span>
+                </div>
+                <div class='p-col-10'>
+                    <textarea pInputTextarea formControlName="oth_other_justification" cols="130" rows="5" [appDisableControl]="true"></textarea>
+                </div>
+                <div class='p-col-2'>
+                    <span>Remarks by ITOT</span>
+                </div>
+                <div class='p-col-10'>
+                    <textarea pInputTextarea formControlName="oth_other_remark" cols="130" rows="5" [appDisableControl]="!canEdit"></textarea>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="fieldsets_spacing"></div>
+
+    <fieldset class="fieldset_common">
+        <legend>Attachment</legend>
+        <app-file-maintainer #reqFileMaintainer [uploaded_files]="request.uploaded_files" [uploadfile_permissions]="uploadfile_permissions" (deletedFiles)="onDeleteFile($event)" [editable]="canEdit" (updatedSomething)="onUploadScreenUpdate($event)">
+        </app-file-maintainer>
+    </fieldset>
+    <div class="fieldsets_spacing"></div>
+
+    <fieldset class="fieldset_common">
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>Creation date</span>
+            </div>
+            <div class='p-col-4'>
+                <span> {{createDate }} </span>
+            </div>
+            <div class='p-col-2'>
+                <span>Last Modification Date</span>
+            </div>
+            <div class='p-col-4'>
+                <span> {{modifyDate }} </span>
+            </div>
+            <div class='p-col-2'>
+                <span>Creation User</span>
+            </div>
+            <div class='p-col-4'>
+                <span> {{creation_user}} </span>
+            </div>
+            <div class='p-col-2'>
+                <span>Last Modification User</span>
+            </div>
+            <div class='p-col-4'>
+                <span> {{last_modification_user}} </span>
+            </div>
+            <div class='p-col-2'>
+                <span>Status</span>
+            </div>
+            <div class='p-col-4'>
+                <span> {{reqStatus}} </span>
+            </div>
+            <div class='p-col-2'>
+                <span>Submission Date</span>
+            </div>
+            <div class='p-col-4'>
+                <span> {{submitDate }} </span>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="fieldsets_spacing"></div>
+
+    <p-footer>
+        <button pButton type="button" type="submit" label="Confirm" class="button_common" *ngIf="canEdit" [disabled]='!localForm.valid'></button>
+        <button pButton type="button" label="Reject" class="button_common" *ngIf="canEdit" [disabled]='!canReject()' (click)="onReject()"></button>
+        <button pButton type="button" label="Save draft" class="button_common" *ngIf="canEdit" (click)="onSaveDraft()" [disabled]='!localForm.dirty'></button>
+        <button pButton type="button" label="Reset" class="button_common" *ngIf="canEdit" (click)="onReset()" [disabled]='!localForm.dirty'></button>
+        <button pButton type="button" label="Edit" class="button_common" *ngIf="canHandle() && !canEdit" (click)="toggleEditMode()"></button>
+        <button pButton type="button" label="Cancel" class="button_common" (click)="onCancel()"></button>
+    </p-footer>
+
+
+</form>
+
+<app-jud-dialog (submitEvent)="onDialogSubmit()" (rejectEvent)="onDialogReject()" (closeEvent)="onDialogClose()" #judDialog></app-jud-dialog>

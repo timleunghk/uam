@@ -1,0 +1,55 @@
+<div class="p-grid top_bar_height">
+    <div class="p-grid top_bar">
+        <div class="p-col-11"></div>
+        <div *ngIf="data && data.current_user" class="p-col-1">{{data.current_user.username}}</div>
+    </div>
+</div>
+
+<div class="p-grid" *ngIf="current_user">
+
+    <div class="p-col-12 p-md-1">
+
+        <div>
+            <img [src]="jud_icon_path" style="width:100%">
+        </div>
+
+        <div>
+            <a [routerLink]="['to-do-list']">
+                <button pButton type="button" label="To Do List" style="width:100%" class="to-do-list-btn">
+            </button>
+            </a>
+
+   
+
+
+
+
+
+        </div>
+    </div>
+
+    <div class="p-col-12 p-md-11 p-col-nogutter">
+        <router-outlet></router-outlet>
+    </div>
+    <!-- <p-toast [style]="{marginTop: '80px'}" baseZIndex="1000"></p-toast> -->
+    <p-toast [style]="{marginTop: '80px', 'width': '600px' }" position="top-right" baseZIndex="1000">
+        <ng-template let-message pTemplate="message">
+            <div style="margin-top: -20px;">
+                <div style="text-align: left">
+                    <h1>{{message.summary}}</h1>
+                </div>
+                <div class="p-grid">
+                    <div class="p-col-2">
+                        <div style="transform: translateY(-40%); -webkit-transform: translateY(-40%); margin-left: 20px;margin-right: 20px;">
+                            <img [src]="'assets/img/'+  message.data['icon'] +'.png'" style="width:60px;height:60px">
+                        </div>
+                    </div>
+                    <div class="p-col-10">
+                        <div [innerHTML]="message.detail">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </p-toast>
+</div>

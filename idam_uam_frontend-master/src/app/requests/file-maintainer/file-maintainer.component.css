@@ -1,0 +1,9 @@
+.deleted-entry {
+    text-decoration: line-through;
+    font-weight: bold;
+    color: red;
+}
+
+.normal-entry {
+    text-decoration: line-none;
+}

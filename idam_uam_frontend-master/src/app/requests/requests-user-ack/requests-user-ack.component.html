@@ -1,0 +1,111 @@
+<div style="width:90% ;position: absolute;top: 40px;">
+
+  <p-panel header="User Acknowledge">
+
+    <div class="p-grid">
+      <div class='p-col-2'>
+        <span>Request ID</span>
+      </div>
+      <div class='p-col-4'>
+        {{requestId}}
+      </div>
+    </div>
+
+    <div class="p-grid">
+      <div class='p-col-2'>
+        <span>UAM ID</span>
+      </div>
+      <div class='p-col-4'>
+        {{uamId}}
+      </div>
+    </div>
+
+    <div class="p-grid">
+      <div class='p-col-2'>
+        <span>Surname</span>
+      </div>
+      <div class='p-col-4'>
+        {{surname}}
+      </div>
+    </div>
+
+    <div class="p-grid">
+      <div class='p-col-2'>
+        <span>Given Name</span>
+      </div>
+      <div class='p-col-4'>
+        {{givenName}}
+      </div>
+    </div>
+
+    <div class="p-grid">
+      <div class='p-col-2'>
+        <span>Rank</span>
+      </div>
+      <div class='p-col-4'>
+        {{rank}}
+      </div>
+    </div>
+
+    <div class="p-grid">
+      <div class='p-col-2'>
+        <span>Post Title</span>
+      </div>
+      <div class='p-col-4'>
+        {{postTitle}}
+      </div>
+    </div>
+
+    <div class="p-grid">
+      <div class='p-col-2'>
+        <span>Internet Email Address</span>
+      </div>
+      <div class='p-col-4'>
+        {{intMail}}
+      </div>
+    </div>
+
+    <div class="p-grid">
+      <div class='p-col-2'>
+        <span>Notes Email Address</span>
+      </div>
+      <div class='p-col-4'>
+        {{notesMail}}
+      </div>
+    </div>
+
+    <div class="p-grid">
+      <div class='p-col-2'>
+        <span>Section</span>
+      </div>
+      <div class='p-col-4'>
+        {{section}}
+      </div>
+    </div>
+
+    <div class="p-grid">
+      <div class='p-col-2'>
+        <span>Status</span>
+      </div>
+      <div class='p-col-4'>
+        {{status_name}}
+      </div>
+    </div>
+
+    <div class="p-grid">
+      <div class='p-col-4'>
+        &nbsp;
+      </div>
+    </div>
+
+    <div class="p-grid">
+      <div class='p-col-4'>
+        <button pButton type="button" label="Submit" class="button_common" (click)="onClick()"
+          *ngIf="(isShowButton)"></button>
+      </div>
+    </div>
+
+  </p-panel>
+</div>
+
+<app-jud-dialog #judDialog></app-jud-dialog>

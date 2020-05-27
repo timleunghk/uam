@@ -1,0 +1,27 @@
+AMQP_URI: 'pyamqp://linuxadmin:P@ssw0rd@172.18.21.116'
+# AMQP_URI: ${AMQP_URI}
+
+JJO_CONFIG:
+  hostname: '172.18.21.157'
+  portno:   1636
+  username: 'cn=Admin,o=JudContext'
+  pwd: 'P@ssw0rd2015'
+  base_dn:  'ou=jjo,ou=User1,o=JUDContext'
+
+LOGGING:
+  version: 1
+
+  formatters:
+    brief:
+      format: '%(asctime)s %(message)s'
+      default_msec_format: '%s.%03d'
+      # datefmt: '%Y-%m-%d %H:%M:%S'
+
+  handlers:
+    console:
+      class: logging.StreamHandler
+      formatter: brief
+  
+  root:
+    level: DEBUG
+    handlers: [console]

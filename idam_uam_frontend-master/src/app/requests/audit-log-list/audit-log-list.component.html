@@ -1,0 +1,20 @@
+<div>
+  <p-table [value]="logs" selectionMode="single" dataKey="request_id" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="tableHeader">Action Time</th>
+        <th class="tableHeader">Action</th>
+        <th class="tableHeader">Given Name</th>
+        <th class="tableHeader">Surname</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-log>
+      <tr [pSelectableRow]="request">
+        <td>{{log.last_modification_date}}</td>
+        <td>{{log.src_http_path}}</td>
+        <td>{{log.given_name}}</td>
+        <td>{{log.surname}}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

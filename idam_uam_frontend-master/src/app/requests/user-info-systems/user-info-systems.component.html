@@ -1,0 +1,531 @@
+<div [formGroup]="parentForm">
+    <div formGroupName="{{formName}}">
+
+        <fieldset class="fieldset_common">
+            <legend>OA Application</legend>
+            <div class="p-grid">
+                <div class='p-col-2'>
+                    <span>Windows Login</span>
+                </div>
+                <div class='p-col-10'>
+                    <p-checkbox binary="true" formControlName="oa_need_windows_login" [appDisableControl]="!canSelectInterfaceTab('oa_need_windows_login')" (onChange)="doWinChg()"></p-checkbox>
+                </div>
+            </div>
+
+            <div class="p-grid">
+                <div class='p-col-2'>
+                    <span>Lotus Notes</span>
+                </div>
+                <div class='p-col-10'>
+                    <p-checkbox binary="true" formControlName="oa_need_lotus_notes" [appDisableControl]="!canSelectInterfaceTab('oa_need_lotus_notes')" (onChange)="doNotesChg()"></p-checkbox>
+                </div>
+            </div>
+
+            <div class="p-grid">
+                <div class='p-col-2'>
+                    <span>Departmental Portal Account</span>
+                </div>
+                <div class='p-col-10'>
+                    <p-checkbox binary="true" formControlName="oa_need_dp" [appDisableControl]="!canSelectInterfaceTab('oa_need_dp')" (onChange)="doDPChg()">
+                    </p-checkbox>
+                </div>
+            </div>
+
+            <div class="p-grid">
+                <div class='p-col-2'>
+                    <span>JJO Portal</span>
+                </div>
+                <div class='p-col-10'>
+                    <p-checkbox binary="true" formControlName="oa_need_jjo" [appDisableControl]="!canSelectInterfaceTab('oa_need_jjo')" (onChange)="doJJOChg()"></p-checkbox>
+                </div>
+            </div>
+        </fieldset>
+
+        <p-tabView>
+            <p-tabPanel header='Windows Login Information' [disabled]="!canViewTab('oa_need_windows_login')">
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Windows Login Name *</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="ad_windows_login_name" [appDisableControl]="!canSelectInterfaceTab('oa_need_windows_login')" (input)="doWinLoginChange()">
+                        <div>
+                            <p-message severity='error' text='Windows Login Name is required and minimum length is 3' *ngIf="canEdit && form.hasError('ad_windows_login_name_empty')"></p-message>
+                        </div>
+                    </div>
+
+                    <div class='p-col-2'>
+                        <span>Magistrate/Presiding Officer of Labour Tribunal</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-checkbox binary="true" formControlName="ad_is_magistrate_of_lt" [appDisableControl]="!canEditTab('oa_need_windows_login')"></p-checkbox>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Windows Login Password *</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="ad_windows_login_password" [appDisableControl]="!canEditTab('oa_need_windows_login')" style="border : 0" readonly>
+                        <div>
+                            <p-message severity='error' text='Windows Login Password is required and minimum length is 3' *ngIf="canEdit && form.hasError('ad_windows_pwd_empty')"></p-message>
+                        </div>
+                    </div>
+
+                    <div class='p-col-2'>
+                        <span>PS of Magistrate/Presiding Officer of Labour Tribunal</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-autoComplete id="input" formControlName="ad_ps_magistrate_of_lt" [suggestions]="suggestedWindowsPS" [appDisableControl]="!canEditTab('oa_need_windows_login')" (completeMethod)="searchWindowsPS($event)" [multiple]="true" [minLength]="1" [dropdown]="false">
+                        </p-autoComplete>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Windows First Name</span>
+                    </div>
+                    <div class='p-col-10'>
+                        <input id="input" type="text" size="30" pInputText formControlName="ad_windows_first_name" [appDisableControl]="!canEditTab('oa_need_windows_login')">
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Windows Last Name</span>
+                    </div>
+                    <div class='p-col-10'>
+                        <input id="input" type="text" size="30" pInputText formControlName="ad_windows_last_name" [appDisableControl]="!canEditTab('oa_need_windows_login')">
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>AD OU *</span>
+                    </div>
+                    <div class='p-col-10'>
+                        <p-dropdown id="input" formControlName="ad_ou" [options]="ad_locations" [appDisableControl]="!canEditTab('oa_need_windows_login')" placeholder="Select AD OU" class="dropdown_common"></p-dropdown>
+                        <div>
+                            <p-message severity='error' text='AD Location is required' *ngIf="canEdit && form.hasError('ad_windows_ou_empty')"></p-message>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Account Expiry Date</span>
+                    </div>
+                    <div class='p-col-10'>
+                        <p-calendar formControlName="ad_account_expiry_date" dateFormat="dd/mm/yy" [appDisableControl]="!canEditTab('oa_need_windows_login')" [showIcon]="true"></p-calendar>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>User must change password at next login</span>
+                    </div>
+                    <div class='p-col-10'>
+                        <p-checkbox binary="true" formControlName="ad_need_change_password_next_login" [appDisableControl]="!canEditTab('oa_need_windows_login')"></p-checkbox>
+                    </div>
+                </div>
+
+                <br />
+
+                <fieldset class="fieldset_common">
+                    <legend>AD Group</legend>
+                    <p-pickList [source]="ad_windows_ass_groups" [target]="ad_windows_ava_groups" sourceHeader="Assign Person to Group(s)" targetHeader="Selected Group(s)" [responsive]="true" filterBy="name" dragdrop="true" sourceFilterPlaceholder="Search by Group name"
+                        targetFilterPlaceholder="Search by Group name" [showSourceControls]="false" [showTargetControls]="false" (onMoveToTarget)="markFormDirty($event)" (onMoveToSource)="markFormDirty($event)" [disabled]="!canEditTab('oa_need_windows_login')">
+                        <ng-template let-group pTemplate="item">
+                            <div>
+                                {{group.name}}
+                            </div>
+                        </ng-template>
+                    </p-pickList>
+
+                </fieldset>
+            </p-tabPanel>
+
+
+            <p-tabPanel header='Lotus Notes Information' [disabled]="!canViewTab('oa_need_lotus_notes')">
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Lotus Notes First Name * </span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="ln_first_name" [appDisableControl]="!canSelectInterfaceTab('oa_need_lotus_notes')" (input)="doNotesAccChange()">
+                        <div>
+                            <p-message severity='error' text='First Name is required ' *ngIf="canEdit && form.hasError('ln_lotus_notes_first_name_empty')"></p-message>
+                        </div>
+                    </div>
+                    <div class='p-col-2'>
+                        <span>Lotus Notes Middle Name * </span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="ln_middle_name" [appDisableControl]="!canSelectInterfaceTab('oa_need_lotus_notes')" (input)="doNotesAccChange()">
+                        <div>
+                            <p-message severity='error' text='Middle Name is required' *ngIf="canEdit && form.hasError('ln_lotus_notes_middle_name_empty')"></p-message>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Lotus Notes Last Name * </span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="ln_last_name" [appDisableControl]="!canSelectInterfaceTab('oa_need_lotus_notes')" (input)="doNotesAccChange()">
+                        <div>
+                            <p-message severity='error' text='Last Name is required ' *ngIf="canEdit && form.hasError('ln_lotus_notes_last_name_empty')"></p-message>
+                        </div>
+                    </div>
+
+                    <div class='p-col-2'>
+                        <span>Lotus Notes Short Name *</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="ln_short_name" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" (input)="onLnShortnameChange()">
+                        <div>
+                            <p-message severity='error' text='Short Name is required ' *ngIf="canEdit && form.hasError('ln_lotus_notes_short_name_empty')"></p-message>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Lotus Notes Password * </span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="ln_notes_password" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" style="border : 0" readonly>
+                        <div>
+                            <p-message severity='error' text='Password is required' *ngIf="canEdit && form.hasError('ln_lotus_notes_pwd_empty')"></p-message>
+                        </div>
+                    </div>
+                    <div class='p-col-2'>
+                        <span>Lotus Notes Account Type</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="ln_account_type" [options]="ln_account_types" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" placeholder="Select Lotus Notes Account Type" class="dropdown_common"></p-dropdown>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Lotus Notes MPS Range</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="ln_mps_range" [options]="ln_mps_ranges" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" placeholder="Select MPS Range" class="dropdown_common"></p-dropdown>
+                    </div>
+                    <div class='p-col-2'>
+                        <span>Lotus Notes Client License</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="ln_client_license" [options]="ln_client_licenses" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" placeholder="Select Lotus Notes Client License" class="dropdown_common">
+                        </p-dropdown>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Internet Mail User</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="ln_is_internet_mail_user" [options]="boolean_choices" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" class="dropdown_common">
+                        </p-dropdown>
+                    </div>
+                    <div class='p-col-2'>
+                        <span>iNotes User</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="ln_is_inote_user" [options]="boolean_choices" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" class="dropdown_common">
+                        </p-dropdown>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>GCN User</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="ln_is_gcn_user" [options]="boolean_choices" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" class="dropdown_common">
+                        </p-dropdown>
+                    </div>
+                    <div class='p-col-2'>
+                        <span>Contractor</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="ln_is_contractor" [options]="boolean_choices" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" class="dropdown_common">
+                        </p-dropdown>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Confidential Mail User</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="ln_is_confidential_mail_user" [options]="boolean_choices" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" class="dropdown_common"></p-dropdown>
+                    </div>
+                    <div class='p-col-2'>
+                        <span>Mail System</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="ln_mail_system" [options]="ln_mail_systems" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" placeholder="Select Mail System" class="dropdown_common"></p-dropdown>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Mail Server</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="ln_mail_server" [options]="ln_mail_servers" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" placeholder="Select Mail Server" class="dropdown_common"></p-dropdown>
+                    </div>
+                    <div class='p-col-2'>
+                        <span>Mail File Name</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="ln_mail_file_name" [appDisableControl]="!canEditTab('oa_need_lotus_notes')">
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Mail File Owner Access</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="ln_mail_file_owner" [options]="ln_mail_file_owner_accesss" placeholder="Select File Owner Access" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" class="dropdown_common">
+                        </p-dropdown>
+                    </div>
+                    <div class='p-col-2'>
+                        <span>Mail File Template</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="ln_mail_template" [options]="ln_mail_file_templates" placeholder="Select Mail File Template" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" class="dropdown_common">
+                        </p-dropdown>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Set Database Quota(MB)</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="ln_database_quota" [appDisableControl]="(!canEditTab('oa_need_lotus_notes')) || (!form.get('ln_set_database_quota').value)" pKeyFilter="int"> &nbsp;
+                        <p-checkbox binary="true" formControlName="ln_set_database_quota" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" (onChange)="doLnDBCheck($event)">
+                        </p-checkbox>
+                    </div>
+                    <div class='p-col-2'>
+                        <span>Set Warning Threshold(MB)</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="ln_warning_threshold" [appDisableControl]="!canEditTab('oa_need_lotus_notes') || (!form.get('ln_set_warning_threshold').value)" pKeyFilter="int"> &nbsp;
+                        <p-checkbox binary="true" formControlName="ln_set_warning_threshold" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" (onChange)="doLnWarnCheck($event)">
+                        </p-checkbox>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Internet Address</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="20" pInputText formControlName="ln_internet_address" [appDisableControl]="!canEditTab('oa_need_lotus_notes')">@
+                        <p-dropdown id="input" formControlName="ln_mail_domain" [options]="ln_mail_domains" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" placeholder="Select Mail Domain" class="dropdown_common"></p-dropdown>
+                        <div>
+                            <p-message severity='error' text='Internet Address is required' *ngIf="canEdit && form.get('ln_internet_address').errors"></p-message>
+                        </div>
+
+                    </div>
+                    <div class='p-col-2'>
+                        <span>License Type</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="ln_license_type" [options]="ln_license_types" [appDisableControl]="!canEditTab('oa_need_lotus_notes')" placeholder="Select License Type" class="dropdown_common"></p-dropdown>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Lotus Notes Remark</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <textarea pInputTextarea formControlName="ln_remarks" cols="130" rows="5" [appDisableControl]="!canEditTab('oa_need_lotus_notes')"></textarea>
+                    </div>
+
+                </div>
+
+                <br />
+                <fieldset class="fieldset_common">
+                    <legend>Lotus Group</legend>
+                    <p-pickList [source]="ln_ass_groups" [target]="ln_ava_groups" sourceHeader="Assign Person to Group(s)" targetHeader="Selected Group(s)" [responsive]="true" filterBy="name" dragdrop="true" sourceFilterPlaceholder="Search by Group name" targetFilterPlaceholder="Search by Group name"
+                        [showSourceControls]="false" [showTargetControls]="false" (onMoveToTarget)="markFormDirty($event)" (onMoveToSource)="markFormDirty($event)" [disabled]="!canEditTab('oa_need_lotus_notes')">
+                        <ng-template let-group pTemplate="item">
+                            <div>
+                                {{group.name}}
+                            </div>
+                        </ng-template>
+                    </p-pickList>
+
+                </fieldset>
+
+            </p-tabPanel>
+
+            <p-tabPanel header='Departmental Portal Account' [disabled]="!canViewTab('oa_need_dp')">
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>DP Login ID *</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="dp_login_id" [appDisableControl]="!canSelectInterfaceTab('oa_need_dp')">
+                        <div>
+                            <p-message severity='error' text='DP Login ID is required' *ngIf="canEdit && form.hasError('dp_login_name_empty')"></p-message>
+                        </div>
+                    </div>
+                    <div class='p-col-2'>
+                        <span>Department ID</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="dp_dep_id" [appDisableControl]="!canEditTab('oa_need_dp')">
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Unique ID for SAML</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="dp_uid_saml" [appDisableControl]="!canEditTab('oa_need_dp')">
+                    </div>
+                    <div class='p-col-2'>
+                        <span>Rank Code</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="dp_rank_code" [options]="dp_rank_codes" [appDisableControl]="!canEditTab('oa_need_dp')" class="dropdown_common" placeholder="Select Rank Code">
+                        </p-dropdown>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Staff Group</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="dp_staff_code" [options]="dp_staff_codes" [appDisableControl]="!canEditTab('oa_need_dp')" class="dropdown_common" placeholder="Select Staff Group">
+                        </p-dropdown>
+                    </div>
+                    <div class='p-col-2'>
+                        <span>Net Mail Address</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="dp_net_mail" [appDisableControl]="!canEditTab('oa_need_dp')">
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>DP First Name</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="dp_first_name" [appDisableControl]="!canEditTab('oa_need_dp')">
+                    </div>
+                    <div class='p-col-2'>
+                        <span>DP Last Name</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="dp_last_name" [appDisableControl]="!canEditTab('oa_need_dp')">
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Employee Type</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="dp_emp_type" [options]="dp_emp_types" [appDisableControl]="!canEditTab('oa_need_dp')" class="dropdown_common" placeholder="Select Employee type">
+                        </p-dropdown>
+                    </div>
+                    <div class='p-col-2'>
+                        <span>ROMA ID</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="dp_roma_id" [appDisableControl]="!canEditTab('oa_need_dp')"> &nbsp;
+                        <button pButton type="button" label="Get Info" class="button_common" (click)="dp_get_roma_info()" [disabled]="!canGetRomaInfo()" *ngIf="!roma_loading"></button>
+                        <p-progressSpinner [style]="{width: '25px', height: '25px'}" *ngIf="roma_loading"></p-progressSpinner>
+                        <div>
+                            <p-message severity='warn' text='Cannot find ROMA record' *ngIf="canEdit && no_roma_found"></p-message>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>ROMA Full Name</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="dp_roma_full_name" [appDisableControl]="!canEditTab('oa_need_dp')" style="border : 0" readonly>
+                    </div>
+                    <div class='p-col-2'>
+                        <span>HKID(First Four Letters)</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <span>{{ dp_hkid.value.substring(0,4) }}</span>
+                        <input id="input" type="hidden" pInputText formControlName="dp_hkid" [appDisableControl]="!canEditTab('oa_need_dp')" #dp_hkid>
+                    </div>
+                </div>
+
+            </p-tabPanel>
+
+
+            <p-tabPanel header='JJO Portal' [disabled]="!canViewTab('oa_need_jjo')">
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>JJO Portal Login ID * </span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="jjo_login_id" [appDisableControl]="!canSelectInterfaceTab('oa_need_jjo')">
+                        <div>
+                            <p-message severity='error' text='JJO Portal Login ID is required' *ngIf="canEdit && form.hasError('jjo_login_name_empty')"></p-message>
+                        </div>
+                    </div>
+                    <div class='p-col-2'>
+                        <span>JJO Portal Email Address </span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="jjo_email" [appDisableControl]="!canEditTab('oa_need_jjo')"> @
+                        <p-dropdown id="input" formControlName="jjo_mail_domain" [options]="jjo_mail_domains" [appDisableControl]="!canEditTab('oa_need_jjo')" class="dropdown_common" placeholder="Select mail domain">
+                        </p-dropdown>
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>JJO Portal First Name </span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="jjo_first_name" [appDisableControl]="!canEditTab('oa_need_jjo')">
+                    </div>
+                    <div class='p-col-2'>
+                        <span>JJO Portal Last name </span>
+                    </div>
+                    <div class='p-col-4'>
+                        <input id="input" type="text" size="30" pInputText formControlName="jjo_last_name" [appDisableControl]="!canEditTab('oa_need_jjo')">
+                    </div>
+                </div>
+
+                <div class="p-grid">
+                    <div class='p-col-2'>
+                        <span>Employee Type</span>
+                    </div>
+                    <div class='p-col-4'>
+                        <p-dropdown id="input" formControlName="jjo_emp_type" [options]="dp_emp_types" [appDisableControl]="!canEditTab('oa_need_jjo')" class="dropdown_common" placeholder="Select Employee type">
+                        </p-dropdown>
+                    </div>
+
+                </div>
+            </p-tabPanel>
+
+        </p-tabView>
+    </div>
+</div>

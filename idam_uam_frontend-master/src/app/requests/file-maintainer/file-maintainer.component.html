@@ -1,0 +1,32 @@
+<div *ngIf="(uploaded_files)">
+  <div *ngFor="let permission of uploadfile_permissions">
+    <fieldset class="fieldset_common" *ngIf="(permission.canEdit && editable) || uploaded_files[permission.status]">
+      <legend>{{permission.description}}</legend>
+      <div *ngIf="(uploaded_files[permission.status])">
+        <div *ngFor="let file of uploaded_files[permission.status]" class="p-grid">
+          <div class="p-col-4">
+            <a href="{{file.url}}" target="_blank"
+              [ngClass]="{'deleted-entry': file.deleted, 'normal-entry': !file.deleted}">{{file.file_name}}</a>
+          </div>
+          <div class="p-col-1">
+            {{file.size | bytes}}
+          </div>
+          <div class="p-col-1">
+            <div *ngIf="permission.canEdit && editable">
+              <button type="button" icon="pi pi-times" pButton *ngIf="!file.deleted"
+                (click)="toggleDeleteFile(file)"></button>
+              <button type="button" icon="pi pi-check" pButton *ngIf="file.deleted"
+                (click)="toggleDeleteFile(file)"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="permission.canEdit && editable">
+        <p-fileUpload name="uploadfile" #reqUploader multiple='true' (onSelect)="updatedSomethingOnScreen()"
+          chooseLabel="Browse" [showUploadButton]="false" (onBeforeUpload)="onBeforeUpload($event)" 
+          (onBeforeSend)="onBeforeSend($event)">
+        </p-fileUpload>
+      </div>
+    </fieldset>
+  </div>
+</div>

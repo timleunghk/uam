@@ -1,0 +1,17 @@
+<p-dialog [header]="header" positionTop='30' [modal]="true" [(visible)]='display' (onHide)='onHide()' [style]="{width: '95%', height: '95%', overflow:'auto'}">
+    <p-tabView [(activeIndex)]="tabActiveIndex" #tabView>
+        <p-tabPanel header="Request Detail" [selected]="true">
+            <app-requests-detail-account-new *ngIf="canShow(['CreateAccountRequest','UpdateAccountRequest'], [0,13])" [request]="request" (closeEvent)='onChildClose($event)'>
+            </app-requests-detail-account-new>
+            <app-requests-detail-account-review *ngIf="canShow(['CreateAccountRequest','UpdateAccountRequest'], [1,4])" [request]="request" (closeEvent)='onChildClose($event)'>
+            </app-requests-detail-account-review>
+            <app-requests-detail-account-execute *ngIf="canShow(['CreateAccountRequest','UpdateAccountRequest' , 'ResetPasswordRequest'
+            ,'DisableAccountRequest','EnableAccountRequest','DeleteAccountRequest' ],  [2,3,5,6,7,8,9,10,11,12])" [request]="request" (closeEvent)='onChildClose($event)'>
+            </app-requests-detail-account-execute>
+        </p-tabPanel>
+        <p-tabPanel header="Request History">
+            <app-audit-log-list [request_id]='request.request_id' *ngIf="request"></app-audit-log-list>
+        </p-tabPanel>
+    </p-tabView>
+</p-dialog>
+<app-jud-dialog #judDialog></app-jud-dialog>

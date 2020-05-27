@@ -1,0 +1,204 @@
+<div [formGroup]="parentForm">
+    <div formGroupName="{{formName}}">
+
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>Account Effective Start Date * </span>
+            </div>
+            <div class='p-col-4'>
+                <p-calendar formControlName="account_effective_start_date" dateFormat="dd/mm/yy" [appDisableControl]="!canEdit" [showIcon]="true" required></p-calendar>
+                <div>
+                    <p-message severity='error' text='Account Effective Start Date is required' *ngIf="canEdit && !form.controls['account_effective_start_date'].valid && form.controls['account_effective_start_date'].dirty">
+                    </p-message>
+                </div>
+            </div>
+            <div class='p-col-2'>
+                <span>Account Effective End Date </span>
+            </div>
+            <div class='p-col-4'>
+                <p-calendar formControlName="account_effective_end_date" dateFormat="dd/mm/yy" [appDisableControl]="!canEdit" [showIcon]="true"></p-calendar>
+                <div>
+                    <p-message severity='error' text='Account Effective Date should not be earlier than start date' *ngIf="canEdit && form.hasError('date_range_error')"></p-message>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>Title *</span>
+            </div>
+            <div class='p-col-4'>
+                <p-dropdown id="input" formControlName="title" [options]="titles" optionLabel="value" [appDisableControl]="!canEdit" class="dropdown_common" required></p-dropdown>
+                <div>
+                    <p-message severity='error' text='Title is required' *ngIf="canEdit && !form.controls['title'].valid && form.controls['title'].dirty"></p-message>
+                </div>
+            </div>
+            <div class='p-col-2'>
+                <span>Surname *</span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="surname" [appDisableControl]="!canEdit" oninput="this.value = this.value.toUpperCase()" onblur="this.value = this.value.trim()" required>
+                <div>
+                    <p-message severity='error' text='Surname is required' *ngIf="canEdit && !form.controls['surname'].valid && form.controls['surname'].dirty"></p-message>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>Given Name (same as ID)*</span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="given_name" [appDisableControl]="!canEdit" (change)="onNameChanged('given_name')" required>
+                <div>
+                    <p-message severity='error' text='Given Name is required' *ngIf="canEdit && !form.controls['given_name'].valid && form.controls['given_name'].dirty"></p-message>
+                </div>
+            </div>
+            <div class='p-col-2'>
+                <span>Preferred Name (e.g. Ken)</span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="prefered_name" [appDisableControl]="!canEdit" (change)="onNameChanged('prefered_name')">
+            </div>
+        </div>
+
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>Surname (Chinese)</span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="surname_chinese" [appDisableControl]="!canEdit">
+            </div>
+            <div class='p-col-2'>
+                <span>Given Name (Chinese)</span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="given_name_chinese" [appDisableControl]="!canEdit">
+            </div>
+        </div>
+
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>Post Title * </span>
+            </div>
+            <div class='p-col-4'>
+                <input id="input" type="text" size="30" pInputText formControlName="post_title" [appDisableControl]="!canEdit" oninput="this.value = this.value.toUpperCase()" onblur="this.value = this.value.trim()" required>
+                <div>
+                    <p-message severity='error' text='Post Title is required' *ngIf="canEdit && !form.controls['post_title'].valid && form.controls['post_title'].dirty"></p-message>
+                </div>
+            </div>
+            <div class='p-col-2'>
+                <span>Rank</span>
+            </div>
+            <div class='p-col-4'>
+                <!-- <p-dropdown id="input" formControlName="rank" [options]="ranks" optionLabel="value"
+          [appDisableControl]="!canEdit" class="dropdown_common"></p-dropdown> -->
+                <p-autoComplete formControlName="master_rank" [suggestions]="suggestedRank" [appDisableControl]="!canEdit" (completeMethod)="searchRanks($event, 'master_rank')" [inputStyle]="{'width':'450px'  }" dataKey="value" forceSelection="true" field="display_text"
+                    [minLength]="2" #autoCompleteRank (onClear)="clearRank($event, 'master_rank')">
+                    <ng-template let-rank pTemplate="item">
+                        <div class="p-grid">
+                            <div class="p-col-4"><strong>{{rank.value}} :</strong></div>
+                            <div class="p-col-8">{{rank.description}}</div>
+                        </div>
+                    </ng-template>
+                </p-autoComplete>
+            </div>
+        </div>
+
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>Substantive Rank</span>
+            </div>
+            <div class='p-col-4'>
+                <!-- <p-dropdown id="input" formControlName="substantive_rank" [options]="sub_ranks" optionLabel="value"
+          [appDisableControl]="!canEdit" class="dropdown_common"></p-dropdown> -->
+                <p-autoComplete formControlName="substantive_rank" [suggestions]="suggestedSubRank" [appDisableControl]="!canEdit" (completeMethod)="searchRanks($event, 'substantive_rank')" [inputStyle]="{'width':'450px'  }" dataKey="value" forceSelection="true" field="display_text"
+                    [minLength]="2" #autoCompleteSubRank (onClear)="clearRank($event, 'substantive_rank')">
+                    <ng-template let-rank pTemplate="item">
+                        <div class="p-grid">
+                            <div class="p-col-4"><strong>{{rank.value}} :</strong></div>
+                            <div class="p-col-8">{{rank.description}}</div>
+                        </div>
+                    </ng-template>
+                </p-autoComplete>
+            </div>
+            <div class='p-col-2'>
+                <span>Section *</span>
+            </div>
+            <div class='p-col-4'>
+                <!-- <p-dropdown id="input" formControlName="section" [options]="sections" optionLabel="value"
+          [appDisableControl]="!canEdit" class="dropdown_common" required></p-dropdown>
+        <div>
+          <p-message severity='error' text='Section is required'
+            *ngIf="canEdit && !form.controls['section'].valid && form.controls['section'].dirty"></p-message>
+        </div> -->
+                <p-autoComplete formControlName="section" [suggestions]="suggestedSection" [appDisableControl]="!canEdit" (completeMethod)="searchSections($event)" [inputStyle]="{'width':'450px'  }" dataKey="code" forceSelection="true" field="display_text" [minLength]="2"
+                    required="true" #autoCompleteSection *ngIf="data.canSelectSection()" (onClear)="clearSection($event)">
+                    <ng-template let-section pTemplate="item">
+                        <div class="p-grid">
+                            <div class="p-col-4"><strong>{{section.code}} :</strong></div>
+                            <div class="p-col-8">{{section.description}}</div>
+                        </div>
+                    </ng-template>
+                </p-autoComplete>
+                <div *ngIf="!data.canSelectSection()">
+                    {{data.current_user.section.display_text}}
+                </div>
+            </div>
+        </div>
+
+        <div class="p-grid">
+            <div class='p-col-2'>
+                <span>JJO / Non-JJO User / Special Account</span>
+            </div>
+            <div class='p-col-4'>
+                <p-dropdown id="input" formControlName="account_type" [options]="acc_types" optionLabel="value" [appDisableControl]="!canEdit" class="dropdown_common"></p-dropdown>
+            </div>
+            <div class='p-col-2'>
+                &nbsp;
+            </div>
+            <div class='p-col-4'>
+                &nbsp;
+            </div>
+        </div>
+
+        <div *ngIf="showContactInfo">
+            <div class="p-grid">
+                <div class='p-col-2'>
+                    <span>Installation Contact Person</span>
+                </div>
+                <div class='p-col-4'>
+                    <input id="input" type="text" size="30" pInputText formControlName="installation_contact_person" (change)="onNameChanged('installation_contact_person')" [appDisableControl]="!canEdit">
+                </div>
+                <div class='p-col-2'>
+                    <span>Installation Contact Phone No.</span>
+                </div>
+                <div class='p-col-4'>
+                    <input id="input" type="text" size="30" pInputText formControlName="installation_contact_phone_no" [appDisableControl]="!canEdit">
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="win_login || notes_acc">
+            <div class="p-grid">
+                <div class='p-col-2'>
+                    <div *ngIf="win_login || notes_acc">
+                        <span>Windows Login Name</span>
+                    </div>
+                </div>
+                <div class='p-col-4'>
+                    <div *ngIf="win_login || notes_acc">
+                        <span> {{win_login}}</span>
+                    </div>
+                </div>
+                <div class='p-col-2'>
+                    <span>Notes Account</span>
+                </div>
+                <div class='p-col-4'>
+                    <span> {{notes_acc}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
